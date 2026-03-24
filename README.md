@@ -24,6 +24,11 @@ Esse comando irá:
 > para desenvolvimento.\
 > Atualmente o usuário e senha estão definidos como `admin`.
 
+No caso de erro para subir os containers por conta das portas **5432** ou **5050** já estarem em uso, basta rodar o seguinte comando para liberar as portas:
+
+    sudo kill -9 $(sudo lsof -t -i :5432)
+    sudo kill -9 $(sudo lsof -t -i :5050)
+
 ------------------------------------------------------------------------
 
 ## Acessando o pgAdmin
