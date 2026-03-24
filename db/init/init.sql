@@ -26,8 +26,7 @@ CREATE TABLE escola (
 );
 
 CREATE TABLE localizacao (
-    id SERIAL PRIMARY KEY,
-    id_escola INTEGER UNIQUE,
+    id_escola INTEGER UNIQUE PRIMARY KEY,
 
     nome TEXT,
     latitude DOUBLE PRECISION,

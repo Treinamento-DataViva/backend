@@ -12,8 +12,8 @@ services:
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init:/docker-entrypoint-initdb.d
-
+      #- ./init:/docker-entrypoint-initdb.d 
+    
     ports:
       - "5432:5432"
 
@@ -31,6 +31,6 @@ services:
 
     depends_on:
       - postgres
-
+      
 volumes:
   postgres_data:
