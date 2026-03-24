@@ -1,0 +1,6 @@
+basedosdados
+pandas
+geopandas
+psycopg2-binary
+sqlalchemy
+geoalchemy2
