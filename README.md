@@ -49,6 +49,10 @@ mesma rede Docker.
 
 ## Criando o Banco de Dados
 
+Acesse o ambiente do projeto e instale as dependências:
+
+    pip install -r requirements.txt 
+    
 Acesse o banco de dados do censo escolar no BigQuery e crie um projeto na sua conta.
 
 Com o projeto criado, atualize a variável `censo_escolar` no arquivo `extract.py` com o ID do seu projeto no Google Cloud.
