@@ -4,3 +4,6 @@ geopandas
 psycopg2-binary
 sqlalchemy
 geoalchemy2
+fastapi
+uvicorn
+python-dotenv
