@@ -73,3 +73,58 @@ Em seguida, acesse a pasta `scripts` e execute o script de extração para popul
 Para parar os containers:
 
     docker compose down
+
+
+------------------------------------------------------------------------
+
+## Como executar o backend
+
+### Pré-requisitos
+
+Antes de executar o projeto, é necessário ter instalado na máquina:
+
+- Python 3.11+ ou 3.12+
+- Docker Desktop
+- Git
+- PowerShell ou outro terminal equivalente
+
+### 1. Criar e ativar o ambiente virtual
+
+No Windows PowerShell, execute:
+
+powershell
+
+python -m venv .venv
+
+.venv\Scripts\activate
+
+2. Instalar as dependências
+
+Com o ambiente virtual ativado, instale as dependências do projeto:
+
+pip install -r requirements.txt
+
+3. Configurar as variáveis de ambiente
+
+Edite o arquivo .env na raiz da pasta backend e informe o seu ID na configuração necessária do projeto.
+
+Exemplo:
+
+DATABASE_URL=postgresql://admin:admin@localhost:5432/censo_escolar
+SEU_ID=coloque_aqui_o_seu_id
+
+4. Executar a API
+
+Estando na pasta raiz do backend, execute:
+
+python -m uvicorn app:app --reload
+
+Se tudo estiver configurado corretamente, o terminal mostrará que o servidor foi iniciado localmente.
+
+5. Acessar a documentação automática
+
+Abra no navegador:
+
+http://127.0.0.1:8000/docs
+
+Essa URL disponibiliza a documentação interativa gerada automaticamente pelo FastAPI.
