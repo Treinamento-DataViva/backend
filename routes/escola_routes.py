@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from db.connection import get_db
 from controllers import escola_controller
-from schemas.escola_schema import EscolaResponse
+from schemas.escola_schema import EscolaResponse, EscolaAggregatedUFResponse
 
 router = APIRouter()
 
@@ -11,6 +11,16 @@ router = APIRouter()
 @router.get("/", response_model=list[EscolaResponse])
 def listar_escolas(db: Session = Depends(get_db)):
     return escola_controller.listar(db)
+
+
+@router.get("/uf/{sigla_uf}", response_model=EscolaAggregatedUFResponse)
+def agregar_escolas_por_uf(sigla_uf: str, db: Session = Depends(get_db)):
+    agregado = escola_controller.agregar_por_uf_filtrado(db, sigla_uf)
+
+    if not agregado:
+        raise HTTPException(status_code=404, detail="Nenhuma escola encontrada para a UF informada")
+
+    return agregado
 
 
 @router.get("/{id_escola}", response_model=EscolaResponse)
