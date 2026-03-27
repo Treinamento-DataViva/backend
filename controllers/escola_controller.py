@@ -14,5 +14,5 @@ def buscar(db: Session, id_escola: int):
     return buscar_escola_por_id(db, id_escola)
 
 
-def agregar_por_uf_filtrado(db: Session, sigla_uf: str):
-    return agregar_escolas_por_uf_filtrado(db, sigla_uf)
+def agregar_por_uf_filtrado(db: Session, sigla_uf: str, ano: int | None = None):
+    return agregar_escolas_por_uf_filtrado(db, sigla_uf, ano)
