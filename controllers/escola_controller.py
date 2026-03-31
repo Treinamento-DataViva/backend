@@ -1,10 +1,16 @@
 from sqlalchemy.orm import Session
-from repositories.escola_repository import listar_escolas, buscar_escola_por_id
+import repositories.escola_repository as escola_repository
 
 
 def listar(db: Session):
-    return listar_escolas(db)
-
+    return escola_repository.listar_escolas(db)
 
 def buscar(db: Session, id_escola: int):
-    return buscar_escola_por_id(db, id_escola)
+    return escola_repository.buscar_escola_por_id(db, id_escola)
+
+def indicadores_por_municipio(db: Session, id_municipio: int):
+    return escola_repository.contar_indicadores_por_municipio(db, id_municipio)
+
+def agregar_por_municipio(db: Session, id_municipio: int):
+    return escola_repository.buscar_escola_por_municipio(db, id_municipio)
+    
