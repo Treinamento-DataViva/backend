@@ -6,6 +6,7 @@ class Escola(Base):
     __tablename__ = "escola"
 
     id_escola = Column(Integer, primary_key=True, index=True)
+    id_municipio = Column(Integer,nullable= False)
 
     ano = Column(Integer, nullable=True)
     nome_escola = Column(Text, nullable=True)
