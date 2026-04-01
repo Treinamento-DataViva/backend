@@ -1,6 +1,6 @@
 import basedosdados as bd
 
-censo_escolar = "datav-490413"  # Substitua pelo ID do seu projeto no Google Cloud    
+censo_escolar = "treinamento-dataviva"  # Substitua pelo ID do seu projeto no Google Cloud    
 
 def extract_data():
     """Extrai dados do Censo Escolar via BigQuery."""

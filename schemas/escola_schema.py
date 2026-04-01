@@ -71,3 +71,25 @@ class EscolaMunicipioItemResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class EscolaAggregatedUFResponse(BaseModel):
+    sigla_uf: str | None = None
+    total_escolas: int
+    agua_potavel: int
+    agua_inexistente: int
+    energia_inexistente: int
+    esgoto_inexistente: int
+    tratamento_lixo_inexistente: int
+    banheiro: int
+    biblioteca: int
+    cozinha: int
+    dormitorio_aluno: int
+    laboratorio_informatica: int
+    laboratorio_ciencias: int
+    quadra_esportes: int
+    refeitorio: int
+    alimentacao: int
+
+    class Config:
+        from_attributes = True
