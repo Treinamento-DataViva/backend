@@ -10,15 +10,24 @@ def listar_escolas(db: Session):
 def buscar_escola_por_id(db: Session, id_escola: int):
     return db.query(Escola).filter(Escola.id_escola == id_escola).first()
 
-def buscar_escola_por_municipio(db: Session, id_municipio: int):
+def buscar_escola_por_municipio(db: Session, id_municipio: int, ano: int | None = None):
 
-    escolas_municipio = (
-            db.query(Escola,Localizacao)
-            .outerjoin(Localizacao, Escola.id_escola == Localizacao.id_escola)
-            .filter(Escola.id_municipio == id_municipio)
-            .all()
-    )
-    
+    if ano is None:
+        escolas_municipio = (
+                db.query(Escola,Localizacao)
+                .outerjoin(Localizacao, Escola.id_escola == Localizacao.id_escola)
+                .filter(Escola.id_municipio == id_municipio)
+                .order_by(Escola.id_municipio, Escola.ano.desc())
+                .all()
+        )
+    else:
+        escolas_municipio = (
+                db.query(Escola,Localizacao)
+                .outerjoin(Localizacao, Escola.id_escola == Localizacao.id_escola)
+                .filter(Escola.id_municipio == id_municipio, Escola.ano == ano)      
+                .all()
+        )
+        
     if not escolas_municipio:
         return None
 
@@ -50,35 +59,56 @@ def buscar_escola_por_municipio(db: Session, id_municipio: int):
     
     return escolas
 
-def contar_indicadores_por_municipio(db: Session, id_municipio: int):
+def contar_indicadores_por_municipio(db: Session, id_municipio: int, ano : int | None = None):
     ultimo_ano = (db.query
                   (Escola.id_escola.label("id_escola"), func.max(Escola.ano).label("ano"))
                   .filter(Escola.id_municipio == id_municipio)
                   .group_by(Escola.id_escola)
                   .subquery()
     )
-
-    indicadores = (
-        db.query(
-        func.count(Escola.id_escola).label("total_escolas"),
-        func.count().filter(Escola.agua_potavel == True).label("agua_potavel"),
-        func.count().filter(Escola.agua_inexistente == True).label("agua_inexistente"),
-        func.count().filter(Escola.energia_inexistente == True).label("energia_inexistente"),
-        func.count().filter(Escola.esgoto_inexistente == True).label("esgoto_inexistente"),
-        func.count().filter(Escola.tratamento_lixo_inexistente == True).label("tratamento_lixo_inexistente"),
-        func.count().filter(Escola.banheiro == True).label("banheiro"),
-        func.count().filter(Escola.biblioteca == True).label("biblioteca"),
-        func.count().filter(Escola.cozinha == True).label("cozinha"),
-        func.count().filter(Escola.dormitorio_aluno == True).label("dormitorio_aluno"),
-        func.count().filter(Escola.laboratorio_informatica == True).label("laboratorio_informatica"),
-        func.count().filter(Escola.laboratorio_ciencias == True).label("laboratorio_ciencias"),
-        func.count().filter(Escola.quadra_esportes == True).label("quadra_esportes"),
-        func.count().filter(Escola.refeitorio == True).label("refeitorio"),
-        func.count().filter(Escola.alimentacao == True).label("alimentacao"))
-    .join(ultimo_ano, (Escola.id_escola == ultimo_ano.c.id_escola) & (Escola.ano == ultimo_ano.c.ano))
-    .filter(Escola.id_municipio == id_municipio)
-    .first()
-    )
+    if ano is None:
+        indicadores = (
+            db.query(
+            func.count(Escola.id_escola).label("total_escolas"),
+            func.count().filter(Escola.agua_potavel == True).label("agua_potavel"),
+            func.count().filter(Escola.agua_inexistente == True).label("agua_inexistente"),
+            func.count().filter(Escola.energia_inexistente == True).label("energia_inexistente"),
+            func.count().filter(Escola.esgoto_inexistente == True).label("esgoto_inexistente"),
+            func.count().filter(Escola.tratamento_lixo_inexistente == True).label("tratamento_lixo_inexistente"),
+            func.count().filter(Escola.banheiro == True).label("banheiro"),
+            func.count().filter(Escola.biblioteca == True).label("biblioteca"),
+            func.count().filter(Escola.cozinha == True).label("cozinha"),
+            func.count().filter(Escola.dormitorio_aluno == True).label("dormitorio_aluno"),
+            func.count().filter(Escola.laboratorio_informatica == True).label("laboratorio_informatica"),
+            func.count().filter(Escola.laboratorio_ciencias == True).label("laboratorio_ciencias"),
+            func.count().filter(Escola.quadra_esportes == True).label("quadra_esportes"),
+            func.count().filter(Escola.refeitorio == True).label("refeitorio"),
+            func.count().filter(Escola.alimentacao == True).label("alimentacao"))
+        .join(ultimo_ano, (Escola.id_escola == ultimo_ano.c.id_escola) & (Escola.ano == ultimo_ano.c.ano))
+        .filter(Escola.id_municipio == id_municipio)
+        .first()
+        )
+    else:
+        indicadores = (
+            db.query(
+            func.count(Escola.id_escola).label("total_escolas"),
+            func.count().filter(Escola.agua_potavel == True).label("agua_potavel"),
+            func.count().filter(Escola.agua_inexistente == True).label("agua_inexistente"),
+            func.count().filter(Escola.energia_inexistente == True).label("energia_inexistente"),
+            func.count().filter(Escola.esgoto_inexistente == True).label("esgoto_inexistente"),
+            func.count().filter(Escola.tratamento_lixo_inexistente == True).label("tratamento_lixo_inexistente"),
+            func.count().filter(Escola.banheiro == True).label("banheiro"),
+            func.count().filter(Escola.biblioteca == True).label("biblioteca"),
+            func.count().filter(Escola.cozinha == True).label("cozinha"),
+            func.count().filter(Escola.dormitorio_aluno == True).label("dormitorio_aluno"),
+            func.count().filter(Escola.laboratorio_informatica == True).label("laboratorio_informatica"),
+            func.count().filter(Escola.laboratorio_ciencias == True).label("laboratorio_ciencias"),
+            func.count().filter(Escola.quadra_esportes == True).label("quadra_esportes"),
+            func.count().filter(Escola.refeitorio == True).label("refeitorio"),
+            func.count().filter(Escola.alimentacao == True).label("alimentacao"))
+            .filter(Escola.id_municipio == id_municipio, Escola.ano == ano)
+            .first()  
+        )
     
     return indicadores
     
