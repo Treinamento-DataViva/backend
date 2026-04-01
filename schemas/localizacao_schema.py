@@ -2,8 +2,8 @@ from pydantic import BaseModel
 
 class LocalizacaoResponse(BaseModel):
     id_escola: int
-    latitude: float | None = None
-    longitude: float | None = None
+    latitude: str | None = None
+    longitude: str | None = None
     geometry: str | None = None
 
     class Config:

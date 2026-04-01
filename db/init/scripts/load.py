@@ -26,7 +26,7 @@ def load_data(df):
     cur.close()
     conn.close()
 
-    df_escola = df[["id_escola","ano","id_escola_nome",
+    df_escola = df[["id_escola","id_municipio","ano","id_escola_nome",
                     "sigla_uf", "rede", "agua_potavel",
                     "agua_inexistente", "energia_inexistente",
                     "esgoto_inexistente", "tratamento_lixo_inexistente",

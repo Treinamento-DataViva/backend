@@ -3,7 +3,7 @@ import basedosdados as bd
 censo_escolar = "treinamento-dataviva"  # Substitua pelo ID do seu projeto no Google Cloud    
 
 def extract_data():
-    """Extrai dados do Censo Escolar 2024 via BigQuery."""
+    """Extrai dados do Censo Escolar via BigQuery."""
    
     query = """
     WITH 
@@ -20,6 +20,7 @@ def extract_data():
     SELECT
         dados.ano as ano,
         dados.sigla_uf as sigla_uf,
+        dados.id_municipio as id_municipio,
         dados.id_escola as id_escola,
         diretorio_id_escola.nome AS id_escola_nome,
         diretorio_id_escola.latitude AS id_escola_latitude,
@@ -57,34 +58,36 @@ def extract_data():
     ON dados.id_escola = diretorio_id_escola.id_escola
     WHERE
         TRUE
-        AND diretorio_id_escola.nome IS NOT NULL
-        AND diretorio_id_escola.latitude IS NOT NULL
-        AND diretorio_id_escola.longitude IS NOT NULL
-        AND agua_potavel IS NOT NULL
-        AND agua_inexistente IS NOT NULL
-        AND dados.energia_inexistente IS NOT NULL
-        AND dados.esgoto_inexistente IS NOT NULL
-        AND dados.tratamento_lixo_inexistente IS NOT NULL
-        AND dados.banheiro IS NOT NULL
-        AND biblioteca IS NOT NULL
-        AND dados.cozinha IS NOT NULL
-        AND dados.dormitorio_aluno IS NOT NULL
-        AND dados.laboratorio_ciencias IS NOT NULL
-        AND dados.laboratorio_informatica IS NOT NULL
-        AND dados.patio_coberto IS NOT NULL
-        AND dados.patio_descoberto IS NOT NULL
-        AND dados.quadra_esportes IS NOT NULL
-        AND dados.refeitorio IS NOT NULL
-        AND alimentacao IS NOT NULL
-        AND dados.acessibilidade_corrimao IS NOT NULL
-        AND dados.acessibilidade_elevador IS NOT NULL
-        AND dados.acessibilidade_pisos_tateis IS NOT NULL
-        AND dados.acessibilidade_vao_livre IS NOT NULL
-        AND dados.acessibilidade_rampas IS NOT NULL
-        AND dados.acessibilidade_sinal_sonoro IS NOT NULL
-        AND dados.acessibilidade_sinal_tatil IS NOT NULL
-        AND dados.acessibilidade_sinal_visual IS NOT NULL
-        AND dados.acessibilidade_inexistente IS NOT NULL
+        AND (
+        diretorio_id_escola.nome IS NOT NULL
+        OR diretorio_id_escola.latitude IS NOT NULL
+        OR diretorio_id_escola.longitude IS NOT NULL
+        OR agua_potavel IS NOT NULL
+        OR agua_inexistente IS NOT NULL
+        OR dados.energia_inexistente IS NOT NULL
+        OR dados.esgoto_inexistente IS NOT NULL
+        OR dados.tratamento_lixo_inexistente IS NOT NULL
+        OR dados.banheiro IS NOT NULL
+        OR biblioteca IS NOT NULL
+        OR dados.cozinha IS NOT NULL
+        OR dados.dormitorio_aluno IS NOT NULL
+        OR dados.laboratorio_ciencias IS NOT NULL
+        OR dados.laboratorio_informatica IS NOT NULL
+        OR dados.patio_coberto IS NOT NULL
+        OR dados.patio_descoberto IS NOT NULL
+        OR dados.quadra_esportes IS NOT NULL
+        OR dados.refeitorio IS NOT NULL
+        OR alimentacao IS NOT NULL
+        OR dados.acessibilidade_corrimao IS NOT NULL
+        OR dados.acessibilidade_elevador IS NOT NULL
+        OR dados.acessibilidade_pisos_tateis IS NOT NULL
+        OR dados.acessibilidade_vao_livre IS NOT NULL
+        OR dados.acessibilidade_rampas IS NOT NULL
+        OR dados.acessibilidade_sinal_sonoro IS NOT NULL
+        OR dados.acessibilidade_sinal_tatil IS NOT NULL
+        OR dados.acessibilidade_sinal_visual IS NOT NULL
+        OR dados.acessibilidade_inexistente IS NOT NULL
+        )
     """
     
     df = bd.read_sql(query, billing_project_id=censo_escolar)

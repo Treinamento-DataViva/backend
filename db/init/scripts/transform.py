@@ -3,6 +3,7 @@ def transform_data(df):
     """Converte tipos de dados para compatibilidade com o PostgreSQL."""
     
     df["id_escola"] = df["id_escola"].astype(int)
+    df["id_municipio"] = df["id_municipio"].astype(int)
 
     bools_data = [
         "agua_potavel","agua_inexistente","energia_inexistente",
@@ -15,7 +16,7 @@ def transform_data(df):
         "acessibilidade_sinal_visual","acessibilidade_inexistente"
     ]
     
-    df[bools_data] = df[bools_data].astype(bool)
+    df[bools_data] = df[bools_data].astype("boolean")
     print("Dados tratados com sucesso!")
 
     return df
