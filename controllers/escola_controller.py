@@ -24,3 +24,6 @@ def agregar_por_municipio(db: Session, id_municipio: int, ano: int | None = None
 
 def agregar_por_uf_filtrado(db: Session, sigla_uf: str, ano: int | None = None):
     return agregar_escolas_por_uf_filtrado(db, sigla_uf, ano)
+
+def listar_anos_por_uf(db: Session, sigla_uf: str):
+    return escola_repository.listar_anos_por_uf(db, sigla_uf)
