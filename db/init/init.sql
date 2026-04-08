@@ -34,3 +34,16 @@ CREATE TABLE localizacao (
 
     FOREIGN KEY (id_escola) REFERENCES escola(id_escola)
 );
+
+CREATE TABLE municipios (
+    id SERIAL PRIMARY KEY,
+    uf INTEGER,
+    nome_uf TEXT,
+    regiao_intermediaria INTEGER,
+    nome_regiao_intermediaria TEXT,
+    regiao_imediata INTEGER,
+    nome_regiao_imediata TEXT,
+    codigo_municipio INTEGER,
+    id_municipio INTEGER UNIQUE,
+    nome_municipio TEXT
+);

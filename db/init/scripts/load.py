@@ -2,6 +2,7 @@ import psycopg2
 import geopandas as gp
 from sqlalchemy import create_engine
 from psycopg2.extras import execute_batch
+import pandas as pd
 
 # Configurações de conexão com o PostgreSQL
 PG_CONFIG = {
@@ -55,4 +56,31 @@ def load_data(df):
     gdf_loc.to_postgis("localizacao", engine, if_exists="append", index=False)
 
     print("Dados carregados com sucesso!")
+
+def load_lookup_table():
+    """Carrega a tabela de consulta de municípios a partir do arquivo Excel."""
+    
+    # Lê o arquivo Excel, pulando as linhas de cabeçalho
+    df_municipios = pd.read_excel("RELATORIO_DTB_BRASIL_2024_MUNICIPIOS.xls", skiprows=5, header=0)
+    
+    # Remove a última coluna se for NaN
+    df_municipios = df_municipios.dropna(axis=1, how='all')
+    
+    # Renomeia as colunas para nomes mais limpos
+    df_municipios = df_municipios.rename(columns={
+        'UF': 'uf',
+        'Nome_UF': 'nome_uf',
+        'Região Geográfica Intermediária': 'regiao_intermediaria',
+        'Nome Região Geográfica Intermediária': 'nome_regiao_intermediaria',
+        'Região Geográfica Imediata': 'regiao_imediata',
+        'Nome Região Geográfica Imediata': 'nome_regiao_imediata',
+        'Município': 'codigo_municipio',
+        'Código Município Completo': 'id_municipio',
+        'Nome_Município': 'nome_municipio'
+    })
+    
+    # Carrega no banco
+    df_municipios.to_sql("municipios", engine, if_exists="replace", index=False)
+    
+    print("Tabela de consulta de municípios carregada com sucesso!")
 
