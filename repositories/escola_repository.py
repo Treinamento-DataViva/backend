@@ -144,3 +144,10 @@ def agregar_escolas_por_uf_filtrado(db: Session, sigla_uf: str, ano: int | None 
         query = query.filter(Escola.sigla_uf == sigla_uf).group_by(Escola.sigla_uf)
 
     return query.first()
+
+def listar_anos_por_uf(db: Session, sigla_uf: str):
+    query = db.query(func.distinct(Escola.ano)).filter(Escola.ano.isnot(None))
+    if sigla_uf != "BR":
+        query = query.filter(Escola.sigla_uf == sigla_uf)
+    anos = [row[0] for row in query.order_by(Escola.ano.desc()).all()]
+    return anos

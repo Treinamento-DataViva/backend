@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException,Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from db.connection import get_db
@@ -52,6 +52,19 @@ def agregar_escolas_por_uf(
         raise HTTPException(status_code=404, detail="Nenhuma escola encontrada para a UF informada")
 
     return agregado
+
+@router.get("/uf/{sigla_uf}/anos", response_model=list[int])
+def listar_anos_por_uf(
+    sigla_uf: str,
+    db: Session = Depends(get_db),
+):
+    sigla_uf = sigla_uf.upper()
+    anos = escola_controller.listar_anos_por_uf(db, sigla_uf)
+
+    if not anos:
+        raise HTTPException(status_code=404, detail="Nenhum ano encontrado para a UF informada")
+
+    return anos
 
 
 @router.get("/{id_escola}", response_model=EscolaResponse)
