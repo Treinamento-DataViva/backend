@@ -5,6 +5,7 @@ from db.connection import get_db
 from controllers import escola_controller
 from schemas import escola_schema as escola
 from schemas.escola_schema import EscolaResponse, EscolaAggregatedUFResponse
+from repositories.municipio_repository import buscar_codigos_por_nome
 
 router = APIRouter()
 
@@ -14,23 +15,55 @@ def listar_escolas(db: Session = Depends(get_db)):
 
 @router.get("/municipios/{id_municipio}/indicadores", response_model = escola.IndicadoresMunicipioResponse)
 def indicadores_por_municipio(
-    id_municipio: int, 
+    id_municipio: str, 
     ano: int | None = Query(default = None),
+    codigo_estado: int | None = Query(default = None),
     db: Session = Depends(get_db)
     ):
     
-    indicadores =  escola_controller.indicadores_por_municipio(db, id_municipio, ano)   
+    # Verificar se id_municipio é numérico (código) ou nome
+    if id_municipio.isdigit():
+        codigo = int(id_municipio)
+    else:
+        # É nome, fazer lookup exato e tratar ambiguidade
+        codigos = buscar_codigos_por_nome(db, id_municipio, codigo_estado)
+        if not codigos:
+            raise HTTPException(status_code=404, detail="Município não encontrado")
+        if len(codigos) > 1:
+            raise HTTPException(
+                status_code=409,
+                detail=f"Nome de município ambíguo. Possíveis códigos: {codigos}"
+            )
+        codigo = codigos[0]
+    
+    indicadores =  escola_controller.indicadores_por_municipio(db, codigo, ano)   
 
     return indicadores
 
 @router.get("/municipios/{id_municipio}", response_model = list[escola.EscolaMunicipioItemResponse])
 def buscar_escolas_municipio(
-    id_municipio: int,
+    id_municipio: str,
     ano: int | None = Query(default = None),
+    codigo_estado: int | None = Query(default = None),
     db: Session = Depends(get_db)
     ):
 
-    escolas = escola_controller.agregar_por_municipio(db, id_municipio, ano) 
+    # Verificar se id_municipio é numérico (código) ou nome
+    if id_municipio.isdigit():
+        codigo = int(id_municipio)
+    else:
+        # É nome, fazer lookup exato e tratar ambiguidade
+        codigos = buscar_codigos_por_nome(db, id_municipio, codigo_estado)
+        if not codigos:
+            raise HTTPException(status_code=404, detail="Município não encontrado")
+        if len(codigos) > 1:
+            raise HTTPException(
+                status_code=409,
+                detail=f"Nome de município ambíguo. Possíveis códigos: {codigos}"
+            )
+        codigo = codigos[0]
+
+    escolas = escola_controller.agregar_por_municipio(db, codigo, ano) 
 
     if not escolas:
         raise HTTPException(status_code = 404, detail= "Nenhuma escola encontrada para esse município")
