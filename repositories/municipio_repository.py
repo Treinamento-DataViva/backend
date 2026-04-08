@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from models.municipio_model import Municipio
 import unicodedata
+from utils.estado_mapping import get_uf_from_codigo
 
 def normalizar_texto(texto: str) -> str:
     """Normaliza o texto: remove acentos e converte para minúsculo."""
@@ -28,3 +29,21 @@ def buscar_codigo_por_nome(db: Session, nome_municipio: str, codigo_estado: int 
     """Retorna o código quando há apenas um match exato."""
     codigos = buscar_codigos_por_nome(db, nome_municipio, codigo_estado)
     return codigos[0] if len(codigos) == 1 else None
+
+
+def buscar_opcoes_por_nome(db: Session, nome_municipio: str) -> list[dict]:
+    """Retorna lista de opções com código, nome e UF quando há ambiguidade."""
+    codigos = buscar_codigos_por_nome(db, nome_municipio)
+    opcoes = []
+    
+    for codigo in codigos:
+        municipio = db.query(Municipio).filter(Municipio.cd_estado_municipio == codigo).first()
+        if municipio:
+            uf = get_uf_from_codigo(codigo)
+            opcoes.append({
+                "codigo": codigo,
+                "nome": municipio.ds_municipio,
+                "uf": uf
+            })
+    
+    return opcoes
